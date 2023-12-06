@@ -59,10 +59,8 @@ class _MyHomePageState extends State<MyHomePage> {
     switch (selectedIndex) {
       case 0:
         page = GeneratorPage();
-        break;
       case 1:
         page = FavoritesPage();
-        break;
       default:
         throw UnimplementedError('no widget for $selectedIndex');
     }
@@ -161,14 +159,28 @@ class BigCard extends StatelessWidget {
     final style = theme.textTheme.displayMedium!.copyWith(
       color: theme.colorScheme.onPrimary,
     );
+    final style2 = theme.textTheme.displayMedium!.copyWith(
+      color: Color.fromRGBO(120, 250, 20, 100),
+      fontWeight: FontWeight.w900,
+    );
     return Card(
       color: theme.colorScheme.primary,
       child: Padding(
         padding: const EdgeInsets.all(20),
-        child: Text(
-          pair.asLowerCase,
-          style: style,
-          semanticsLabel: pair.asPascalCase,
+        child: Row(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Text(
+              pair.first,
+              style: style,
+              semanticsLabel: pair.asPascalCase,
+            ),
+            Text(
+              pair.second,
+              style: style2,
+              semanticsLabel: pair.asPascalCase,
+            ),
+          ],
         ),
       ),
     );
