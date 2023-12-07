@@ -60,6 +60,13 @@ class MyAppState extends ChangeNotifier {
     }
     notifyListeners();
   }
+
+  void emptyTrash() {
+    if (deleted.isNotEmpty) {
+      deleted.clear();
+    }
+    notifyListeners();
+  }
 }
 
 class MyHomePage extends StatefulWidget {
@@ -262,6 +269,16 @@ class TrashPage extends StatelessWidget {
           child: Text('You have '
               '${appState.deleted.length} deleted. You can add them back into favorites:'),
         ),
+        ElevatedButton(
+            onPressed: () {
+              appState.emptyTrash();
+            },
+            child: ListTile(
+              leading: Icon(
+                Icons.delete_forever_sharp,
+              ),
+              title: Text("Delete Forever"),
+            )),
         for (var pair in appState.deleted)
           ListTile(
             leading: IconButton(
