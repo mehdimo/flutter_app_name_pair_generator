@@ -28,13 +28,13 @@ class MyApp extends StatelessWidget {
 
 class MyAppState extends ChangeNotifier {
   var current = WordPair.random();
+  var favorites = <WordPair>[];
+  var deleted = <WordPair>[];
 
   void getNext() {
     current = WordPair.random();
     notifyListeners();
   }
-
-  var favorites = <WordPair>[];
 
   void toggleFavorite() {
     if (favorites.contains(current)) {
@@ -48,6 +48,15 @@ class MyAppState extends ChangeNotifier {
   void deleteFavorite(pair) {
     if (favorites.contains(pair)) {
       favorites.remove(pair);
+      deleted.add(pair);
+    }
+    notifyListeners();
+  }
+
+  void backToFavorite(pair) {
+    if (deleted.contains(pair)) {
+      deleted.remove(pair);
+      favorites.add(pair);
     }
     notifyListeners();
   }
@@ -69,6 +78,8 @@ class _MyHomePageState extends State<MyHomePage> {
         page = GeneratorPage();
       case 1:
         page = FavoritesPage();
+      case 2:
+        page = TrashPage();
       default:
         throw UnimplementedError('no widget for $selectedIndex');
     }
@@ -87,6 +98,10 @@ class _MyHomePageState extends State<MyHomePage> {
                 NavigationRailDestination(
                   icon: Icon(Icons.favorite),
                   label: Text('Favorites'),
+                ),
+                NavigationRailDestination(
+                  icon: Icon(Icons.delete_rounded),
+                  label: Text('Deleted'),
                 ),
               ],
               selectedIndex: selectedIndex,
@@ -221,6 +236,40 @@ class FavoritesPage extends StatelessWidget {
                 appState.deleteFavorite(pair);
               },
               icon: Icon(Icons.delete),
+            ),
+            title: Text(pair.asLowerCase),
+          ),
+      ],
+    );
+  }
+}
+
+class TrashPage extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    var appState = context.watch<MyAppState>();
+
+    if (appState.deleted.isEmpty) {
+      return Center(
+        child: Text('No deleted item.'),
+      );
+    }
+
+    return ListView(
+      children: [
+        Padding(
+          padding: const EdgeInsets.all(20),
+          child: Text('You have '
+              '${appState.deleted.length} deleted. You can add them back into favorites:'),
+        ),
+        for (var pair in appState.deleted)
+          ListTile(
+            leading: IconButton(
+              color: Colors.green,
+              onPressed: () {
+                appState.backToFavorite(pair);
+              },
+              icon: Icon(Icons.restore),
             ),
             title: Text(pair.asLowerCase),
           ),
