@@ -269,7 +269,9 @@ class TrashPage extends StatelessWidget {
           child: Text('You have '
               '${appState.deleted.length} deleted. You can add them back into favorites:'),
         ),
-        ElevatedButton(
+        Padding(
+          padding: const EdgeInsets.only(left: 50, right: 50),
+          child: ElevatedButton(
             onPressed: () {
               appState.emptyTrash();
             },
@@ -278,7 +280,9 @@ class TrashPage extends StatelessWidget {
                 Icons.delete_forever_sharp,
               ),
               title: Text("Delete Forever"),
-            )),
+            ),
+          ),
+        ),
         for (var pair in appState.deleted)
           ListTile(
             leading: IconButton(
