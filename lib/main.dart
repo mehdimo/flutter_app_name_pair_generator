@@ -1,9 +1,26 @@
 import 'package:english_words/english_words.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:flutter_tts/flutter_tts.dart';
 
 void main() {
   runApp(MyApp());
+}
+
+FlutterTts flutterTts = FlutterTts();
+
+Future<void> configureTts() async {
+  await flutterTts.setLanguage('en-US');
+  await flutterTts.setSpeechRate(0.5);
+  await flutterTts.setVolume(1.0);
+}
+
+void speakText(String text) async {
+  await flutterTts.speak(text);
+}
+
+void stopSpeaking() async {
+  await flutterTts.stop();
 }
 
 class MyApp extends StatelessWidget {
@@ -31,8 +48,11 @@ class MyAppState extends ChangeNotifier {
   var favorites = <WordPair>[];
   var deleted = <WordPair>[];
 
-  void getNext() {
+  void getNext(isSpeakEnabled) {
     current = WordPair.random();
+    if (isSpeakEnabled) {
+      speakText(current.first + " " + current.second);
+    }
     notifyListeners();
   }
 
@@ -131,7 +151,14 @@ class _MyHomePageState extends State<MyHomePage> {
   }
 }
 
-class GeneratorPage extends StatelessWidget {
+class GeneratorPage extends StatefulWidget {
+  @override
+  State<GeneratorPage> createState() => _GeneratorPageState();
+}
+
+class _GeneratorPageState extends State<GeneratorPage> {
+  bool speakSwitched = true;
+
   @override
   Widget build(BuildContext context) {
     var appState = context.watch<MyAppState>();
@@ -148,6 +175,14 @@ class GeneratorPage extends StatelessWidget {
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
+          Switch(
+            value: speakSwitched,
+            onChanged: (bool value) {
+              setState(() {
+                speakSwitched = value;
+              });
+            },
+          ),
           BigCard(pair: pair),
           SizedBox(height: 10),
           Row(
@@ -163,7 +198,7 @@ class GeneratorPage extends StatelessWidget {
               SizedBox(width: 10),
               ElevatedButton(
                 onPressed: () {
-                  appState.getNext();
+                  appState.getNext(speakSwitched);
                 },
                 child: Text('Next'),
               ),
