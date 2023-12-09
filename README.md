@@ -8,4 +8,4 @@ The code is developed based on [codelab](https://docs.flutter.dev/get-started/co
 `flutter_tts` package is used to say the words. 
    - Known issue: the tts may not work on devices; but works on web target.   
 
-<img alt="screen play image" src="img/screen_play.gif">
+<img alt="screen play image" src="img/screen_play.gif" width=35% >
