@@ -175,13 +175,19 @@ class _GeneratorPageState extends State<GeneratorPage> {
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          Switch(
-            value: speakSwitched,
-            onChanged: (bool value) {
-              setState(() {
-                speakSwitched = value;
-              });
-            },
+          Row(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Text("Speak the words"),
+              Switch(
+                value: speakSwitched,
+                onChanged: (bool value) {
+                  setState(() {
+                    speakSwitched = value;
+                  });
+                },
+              ),
+            ],
           ),
           BigCard(pair: pair),
           SizedBox(height: 10),
